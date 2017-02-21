@@ -29,6 +29,74 @@ p.main {
 
 .legend {
   position: absolute;
+  width: 130px;
+  top:14px;
+  left:563px;
   background-color: #fff;
   z-index: 2000;
+}
+
+#MON {
+  width: 36px;
+  height: 15px;
+  background-color: #f7c5c3;
+  position: absolute;
+  top:20px;
+  z-index:2000;
+  border-top: 1px;
+  border-color: #aaaaaa;
+}
+
+#TUE {
+  width: 36px;
+  height: 15px;
+  background-color: #f7f7c3;
+  position: absolute;
+  top:40px;
+  z-index:2000;
+}
+#WED {
+  width: 36px;
+  height: 15px;
+  background-color: #c5c5f5;
+  position: absolute;
+  top:60px;
+  z-index:2000;
+}
+#THU {
+  width: 36px;
+  height: 15px;
+  background-color: #c5dec3;
+  position: absolute;
+  top:80px;
+  z-index:2000;
+}
+#FRI {
+  width: 36px;
+  height: 15px;
+  background-color: #f3e7e7;
+  position: absolute;
+  top:100px;
+  z-index:2000;
+}
+
+#legend {
+  margin: 0;
+}
+
+.legend-text {
+  margin:0;
+  position: absolute;
+
+  z-index: 2301px;
+}
+
+.legend-tbox {
+  position: absolute;
+  top:20px;
+  left: 40px;
+  width: 90px;
+  height: 95px;
+  z-index: 2300;
+  background-color: #fff;
 }

@@ -123,11 +123,31 @@ of the application to report this information.
 
 ===================== */
 
-var dataset = "https://raw.githubusercontent.com/CPLN692-MUSA611/datasets/master/geojson/philadelphia-garbage-collection-boundaries.geojson"
+var dataset = "https://raw.githubusercontent.com/CPLN692-MUSA611/datasets/master/geojson/philadelphia-garbage-collection-boundaries.geojson";
 var featureGroup;
 
 var myStyle = function(feature) {
-  return {};
+  var fill;
+  var collday = feature.properties.COLLDAY;
+  if(feature.properties.COLLDAY == 'MON'){
+    fill = "red";
+  } else if (feature.properties.COLLDAY== 'TUE') {
+    fill = 'yellow';
+  } else if (feature.properties.COLLDAY== 'WED') {
+    fill = 'blue';
+  } else if (feature.properties.COLLDAY== 'THU') {
+    fill = 'green';
+  } else if (feature.properties.COLLDAY== 'FRI') {
+    fill = 'pink';
+  } else if (feature.properties.COLLDAY== 'SAT') {
+    fill = 'purple';
+  } else if (feature.properties.COLLDAY== 'SUN'){
+    fill = 'orange';
+  } else{
+    fill = 'black';
+  }
+  console.log("COLLDAY",feature.properties.COLLDAY);
+  return {fillColor: fill};
 };
 
 var showResults = function() {
@@ -152,17 +172,49 @@ var eachFeatureFunction = function(layer) {
     you can use in your application.
     ===================== */
     console.log(layer.feature);
+    var dayOfWeek;
+    if (layer.feature.properties.COLLDAY === 'MON'){
+      dayOfWeek = 'Monday';
+    } else if (layer.feature.properties.COLLDAY === 'TUE'){ // some shortcuts??? no
+      dayOfWeek = 'Tuesday';
+    } else if (layer.feature.properties.COLLDAY === 'WED'){
+      dayOfWeek = 'Wednesday';
+    } else if (layer.feature.properties.COLLDAY === 'THU'){
+      dayOfWeek = 'Thursday';
+    } else if (layer.feature.properties.COLLDAY === 'FRI'){
+      dayOfWeek = 'Friday';
+    } else if (layer.feature.properties.COLLDAY === 'SAT'){
+      dayOfWeek = 'Saturday';
+    } else if (layer.feature.properties.COLLDAY === 'SUN'){
+      dayOfWeek = 'Sunday';
+    } else {
+      dayOfWeek = 'N/A';
+    }
+    $('.day-of-week').text(dayOfWeek);
     showResults();
   });
 };
 
 var myFilter = function(feature) {
-  return true;
+  var condition;
+  if (feature.properties.COLLDAY === 'MON'||
+      feature.properties.COLLDAY === "TUE"||
+      feature.properties.COLLDAY === "WED"||
+      feature.properties.COLLDAY === "THU"||
+      feature.properties.COLLDAY === "FRI"||
+      feature.properties.COLLDAY === "SAT"||
+      feature.properties.COLLDAY === "SUN"){
+    condition = true;
+  } else {
+    condition = false;
+  }
+  return condition;
 };
 
 $(document).ready(function() {
   $.ajax(dataset).done(function(data) {
     var parsedData = JSON.parse(data);
+    console.log(parsedData);
     featureGroup = L.geoJson(parsedData, {
       style: myStyle,
       filter: myFilter
