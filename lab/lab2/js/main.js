@@ -172,6 +172,12 @@ var eachFeatureFunction = function(layer) {
     you can use in your application.
     ===================== */
     console.log(layer.feature);
+
+    //task 6
+    var fg = L.geoJson(layer.feature);
+    var layerId = fg.getLayerId(layer);
+    console.log("feature group ID:", layerId);
+
     var dayOfWeek;
     if (layer.feature.properties.COLLDAY === 'MON'){
       dayOfWeek = 'Monday';
@@ -191,9 +197,43 @@ var eachFeatureFunction = function(layer) {
       dayOfWeek = 'N/A';
     }
     $('.day-of-week').text(dayOfWeek);
+    $('#LeafletID').text('LeafletID is: ' + layerId);
     showResults();
   });
 };
+
+// var eachFeatureFunction = function(layer) {
+//   layer.on('click', function (event) {
+//     /* =====================
+//     The following code will run every time a layer on the map is clicked.
+//     Check out layer.feature to see some useful data about the layer that
+//     you can use in your application.
+//     ===================== */
+//     console.log(layer.feature);
+//     console.log("feature group ID:", layer.getLayerId);
+//     var dayOfWeek;
+//     if (layer.feature.properties.COLLDAY === 'MON'){
+//       dayOfWeek = 'Monday';
+//     } else if (layer.feature.properties.COLLDAY === 'TUE'){ // some shortcuts??? no
+//       dayOfWeek = 'Tuesday';
+//     } else if (layer.feature.properties.COLLDAY === 'WED'){
+//       dayOfWeek = 'Wednesday';
+//     } else if (layer.feature.properties.COLLDAY === 'THU'){
+//       dayOfWeek = 'Thursday';
+//     } else if (layer.feature.properties.COLLDAY === 'FRI'){
+//       dayOfWeek = 'Friday';
+//     } else if (layer.feature.properties.COLLDAY === 'SAT'){
+//       dayOfWeek = 'Saturday';
+//     } else if (layer.feature.properties.COLLDAY === 'SUN'){
+//       dayOfWeek = 'Sunday';
+//     } else {
+//       dayOfWeek = 'N/A';
+//     }
+//     $('.day-of-week').text(dayOfWeek);
+//
+//     showResults();
+//   });
+// };
 
 var myFilter = function(feature) {
   var condition;
@@ -209,6 +249,10 @@ var myFilter = function(feature) {
     condition = false;
   }
   return condition;
+};
+
+var getLayerID = function(layer){
+  var LeafletID = L.featureGroup.getLayerId(layer);
 };
 
 $(document).ready(function() {

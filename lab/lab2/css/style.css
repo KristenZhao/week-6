@@ -43,8 +43,9 @@ p.main {
   position: absolute;
   top:20px;
   z-index:2000;
-  border-top: 1px;
-  border-color: #aaaaaa;
+  border: 2px;
+  border-color: #3353f6;
+  border-style: solid;
 }
 
 #TUE {
@@ -54,6 +55,7 @@ p.main {
   position: absolute;
   top:40px;
   z-index:2000;
+  border: 2px solid #3353f6;
 }
 #WED {
   width: 36px;
@@ -62,6 +64,7 @@ p.main {
   position: absolute;
   top:60px;
   z-index:2000;
+  border: 2px solid #3353f6;
 }
 #THU {
   width: 36px;
@@ -70,6 +73,7 @@ p.main {
   position: absolute;
   top:80px;
   z-index:2000;
+  border: 2px solid #3353f6;
 }
 #FRI {
   width: 36px;
@@ -78,6 +82,7 @@ p.main {
   position: absolute;
   top:100px;
   z-index:2000;
+  border: 2px solid #3353f6;
 }
 
 #legend {
