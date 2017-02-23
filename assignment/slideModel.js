@@ -8,4 +8,8 @@ Week 6 Assignment: Slide Model
 var slideExample = {
   slideNumber: 1,
   title: "My first slide"
+  bikeCrash2014:[{
+    crash_month: 12;
+    illumination: 1;
+  }]
 };
