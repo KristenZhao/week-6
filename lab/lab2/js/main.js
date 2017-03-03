@@ -171,7 +171,7 @@ var eachFeatureFunction = function(layer) {
     Check out layer.feature to see some useful data about the layer that
     you can use in your application.
     ===================== */
-    console.log(layer.feature);
+    console.log("hello:",layer,layer.feature);
 
     //task 6
     var fg = L.geoJson(layer.feature);
@@ -259,7 +259,7 @@ $(document).ready(function() {
   $.ajax(dataset).done(function(data) {
     var parsedData = JSON.parse(data);
     console.log(parsedData);
-    featureGroup = L.geoJson(parsedData, {
+    featureGroup = L.geoJson(parsedData, { //L.geoJSON loops through each feature. featureGroup object is in fact a leaflet layer
       style: myStyle,
       filter: myFilter
     }).addTo(map);
