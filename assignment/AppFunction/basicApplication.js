@@ -1,5 +1,5 @@
 /* ================================
-Week 6 Assignment: Basic Application
+Midterm Project
 
 Take a look at the midterm prototype: https://marvelapp.com/bf2c9h/screen/10434841
 Try clicking on the "Next" and "Previous" buttons. This task will ask you to write some functions
@@ -31,6 +31,17 @@ var Stamen_TonerLite = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{
 /* ===============================
 STEP 2 - functions
 ==============================*/
+var winterFilter = function(data){
+  var condition;
+  if (data.properties.CRASH_MONT === '12'||
+      data.properties.CRASH_MONT === "1"||
+      data.properties.CRASH_MONT === "2"){
+    condition = true;
+  } else {
+    condition = false;
+  }
+  return condition;
+};
 
 var state = {
   "slideNumber": 0, // slideNumber keeps track of what slide you are on. It should increase when you
@@ -55,10 +66,16 @@ var state = {
     {
       "name": "Winter months (Dec,Jan,Feb)",
       "content": "In winter, bike crashes are concentrated in the center city area",
-      "page": "2 of 6"
+      "page": "2 of 6",
       "map" : function (data){
-        
-      }
+                L.geoJson(data, {
+                  filter: winterFilter,
+                  pointToLayer: function (point,style) {
+                  //console.log("index", index);
+                    return L.circleMarker([point.geometry.coordinates[1],point.geometry.coordinates[0]], geojsonMarkerOption_Winter);
+                }
+              }).addTo(map);
+            }
     },
     {
       "name": "Spring months (Mar,Apr,May)",
@@ -103,7 +120,7 @@ var clickNextButton = function() {
   var pageState = [
     $(".subtitle").text(state.slideData[state.slideNumber].name),
     $(".description").text(state.slideData[state.slideNumber].content),
-    $(".page").text("page: " +state.slideData[state.slideNumber].page)
+    $(".page").text("page: " +state.slideData[state.slideNumber].page),
   ];
   return (pageState);
 };
@@ -161,11 +178,11 @@ var theFrontButton = function(){
 };
 
 /* ===============================
-STEP 4 - add crash point data
+STEP 4 -  set crash point data styles
 ==============================*/
 // get geoJSON
 var bikeCrash = "https://gist.githubusercontent.com/KristenZhao/f2f81e81ed6a47fdbad77b072ffc178f/raw/c9df3da2ad89e9cc44c0f949a35bfc42426c659d/BikeCrash2014Simplified.json";
-// set style
+// set "all" style
 var geojsonMarkerOptions = {
     radius: 3,
     fillColor: "#ff7800",
@@ -175,9 +192,18 @@ var geojsonMarkerOptions = {
     fillOpacity: 0.8
 };
 
+// set "all" style
+var geojsonMarkerOption_Winter = {
+    radius: 3,
+    fillColor: "#2155a8",
+    color: "#eeeeee",
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.8
+};
 
 
-////////////////
+//////////////// Execution /////////////////
 $(document).ready(function() {
     $.ajax(bikeCrash).done(function(data){
       //console.log(data);
@@ -193,7 +219,7 @@ $(document).ready(function() {
       $(".description").text(state.slideData[0].content);
       $(".page").text("page: " +state.slideData[0].page);
       state.slideData[0].map(crashFeatures);
-
+      remove(state.slideData[0].map(crashFeatures));
 
       $("#back").prop("disabled",true);
       $("#back-to-initial").prop("disabled",true);
@@ -202,7 +228,9 @@ $(document).ready(function() {
 
       // Button Events
       $("#next").click(function(ev){
+        map.removeLayer(state.slideData[0]); // ??????????????????? don't know how to remove existing layers  ??????????????
         clickNextButton();
+        state.slideData[state.slideNumber].map(crashFeatures);
         //console.log("both button are working!");
       });
       $("#back").click(function(event){
@@ -214,12 +242,5 @@ $(document).ready(function() {
       $("#back-to-initial").click(function(event){
         theFrontButton();
       });
-      // featureGroup = L.geoJson(parsedData, {
-      //   style: myStyle,
-      //   filter: myFilter
-      // }).addTo(map);
-      //
-      // // quite similar to _.each
-      // featureGroup.eachLayer(eachFeatureFunction);
-    });
+  });
 });
