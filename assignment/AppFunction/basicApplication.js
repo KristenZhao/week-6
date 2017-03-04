@@ -17,7 +17,7 @@ console. For example, try running: clickNextButton() and see what it does. Use l
 STEP 1 - Leaflet Configuration
 ===================== */
 var map = L.map('map', {
-  center: [39.9522, -75.1639],
+  center: [39.97, -75.16],
   zoom: 11,
 });
 var Stamen_TonerLite = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -39,34 +39,46 @@ var state = {
                     // get so small that it is smaller than 0.
   "slideData": [
     {
-      "name": "Overview",
-      "content": "Philadelphia Bike Crashes with vehicles in 2014",
-      "data overview": bikeCrash2014
+      "name": "All crashes that involved with bike and cars", //<h2>
+      "content": "There are 551 crashes in 2014. The majority of accidents happened" +
+      "in the Center City and the University City area.", //<p>
+      "page": "1 of 6",
+      "map" : function (data){
+                L.geoJson(data, {
+                pointToLayer: function (point,style) {
+                //console.log("index", index);
+                  return L.circleMarker([point.geometry.coordinates[1],point.geometry.coordinates[0]], geojsonMarkerOptions);
+                }
+              }).addTo(map);
+            }
     },
     {
-      "name": "Bike Crash winter (Dec,Jan,Feb)",
-      "language": "Javascript",
-      "namespace": "_"
+      "name": "Winter months (Dec,Jan,Feb)",
+      "content": "In winter, bike crashes are concentrated in the center city area",
+      "page": "2 of 6"
+      "map" : function (data){
+        
+      }
     },
     {
-      "name": "Bike Crash spring (Mar,Apr,May)",
-      "language": "Javascript",
-      "namespace": "$"
+      "name": "Spring months (Mar,Apr,May)",
+      "content": "spring crash",
+      "page": "3 of 6"
     },
     {
-      "name": "Bike Crash summer(Jun,Jul,Aug)",
-      "language": "Javascript",
-      "namespace": "L"
+      "name": "Summer months (Jun,Jul,Aug)",
+      "content": "summer crash",
+      "page": "4 of 6"
     },
     {
-      "name": "Bike Crash fall(Sep,Oct,Nov)",
-      "language": "Javascript",
-      "namespace": "_"
+      "name": "Fall months(Sep,Oct,Nov)",
+      "content": "fall crash",
+      "page": "5 of 6"
     },
     {
-      "name": "Bike Crash conclusion",
-      "language": "Javascript",
-      "namespace": "$"
+      "name": "Bike Crash Conclusion",
+      "content": "conclusion",
+      "page": "6 of 6"
     }
   ]
 };
@@ -87,7 +99,13 @@ var clickNextButton = function() {
     console.log('reached last page!');
     $("#next").prop("disabled",true);
     $("#to-the-end").prop("disabled",true);
-  } return ($(".description").text("page number: "+state.slideNumber));
+  }
+  var pageState = [
+    $(".subtitle").text(state.slideData[state.slideNumber].name),
+    $(".description").text(state.slideData[state.slideNumber].content),
+    $(".page").text("page: " +state.slideData[state.slideNumber].page)
+  ];
+  return (pageState);
 };
 
 var clickPreviousButton = function() {
@@ -102,7 +120,13 @@ var clickPreviousButton = function() {
     console.log("content "+state.slideData[state.slideNumber].name);
     $("#back").prop("disabled",true);
     $("#back-to-initial").prop("disabled",true);
-  } return ($(".description").text("page number: "+state.slideNumber));
+  }
+  var pageState = [
+    $(".subtitle").text(state.slideData[state.slideNumber].name),
+    $(".description").text(state.slideData[state.slideNumber].content),
+    $(".page").text("page: " +state.slideData[state.slideNumber].page)
+  ];
+  return (pageState);
 };
 
 var theEndButton = function(){
@@ -112,7 +136,12 @@ var theEndButton = function(){
     $("#to-the-end").prop("disabled",true);
     $("#back").prop("disabled",false);
     $("#back-to-initial").prop("disabled",false);
-    return ($(".description").text("page number: "+state.slideNumber));
+    var pageState = [
+      $(".subtitle").text(state.slideData[state.slideNumber].name),
+      $(".description").text(state.slideData[state.slideNumber].content),
+      $(".page").text("page: " +state.slideData[state.slideNumber].page)
+    ];
+    return (pageState);
 };
 
 var theFrontButton = function(){
@@ -122,31 +151,25 @@ var theFrontButton = function(){
     $("#to-the-end").prop("disabled",false);
     $("#back").prop("disabled",true);
     $("#back-to-initial").prop("disabled",true);
-    return ($(".description").text("page number: "+state.slideNumber));
+    var pageState = [
+      $(".subtitle").text(state.slideData[state.slideNumber].name),
+      $(".description").text(state.slideData[state.slideNumber].content),
+      $(".page").text("page: " +state.slideData[state.slideNumber].page)
+    ];
+    return (pageState);
+    //return ($(".description").text("page number: "+state.slideNumber));
 };
 
 /* ===============================
-STEP 4 - add content, change to a more legible icon
+STEP 4 - add crash point data
 ==============================*/
-// convert to geoJSON, point features. and set style.
-var makeMarkers = function(parsed) {
-  var markersArray = _.map(parsed,function(parsedItem){
-  console.log('L.marker:',L.marker([parsedItem.geometry.y,parsedItem.geometry.x]));
-  return L.marker([parsedItem.geometry.y,parsedItem.geometry.x]);
-  }); return markersArray;
-};
-
-var plotMarkers = function(markers) {
-  _.map(markers,function(marker){marker.addTo(map);
-  });
-};
-
-var newIcon = {};
-// try point to layer
+// get geoJSON
+var bikeCrash = "https://gist.githubusercontent.com/KristenZhao/f2f81e81ed6a47fdbad77b072ffc178f/raw/c9df3da2ad89e9cc44c0f949a35bfc42426c659d/BikeCrash2014Simplified.json";
+// set style
 var geojsonMarkerOptions = {
-    radius: 8,
+    radius: 3,
     fillColor: "#ff7800",
-    color: "#000",
+    color: "#eeeeee",
     weight: 1,
     opacity: 1,
     fillOpacity: 0.8
@@ -156,43 +179,47 @@ var geojsonMarkerOptions = {
 
 ////////////////
 $(document).ready(function() {
-    /* ===============================
-    Page 1: add Bike Crash Map, disable buttons
-    ==============================*/
-    // var markers = makeMarkers(bikeCrash);
-    // plotMarkers(markers);
-    console.log("bike crash test",bikeCrashTest);
-    L.geoJson(bikeCrashTest, {
-      pointToLayer: function (feature, latlng) {
-        return L.circleMarker([bikeCrashTest.geometry.y,bikeCrashTest.geometry.x], geojsonMarkerOptions);
-      }
-    }).addTo(map);
+    $.ajax(bikeCrash).done(function(data){
+      //console.log(data);
+      var parsedCrash = JSON.parse(data);
+      var crashFeatures = parsedCrash.features;
+      //console.log(crashFeatures[0].geometry.coordinates);
+
+      /* ===============================
+      Page 1: add Bike Crash Map, disable buttons
+      ==============================*/
+      //plot all crash onto initial page
+      $(".subtitle").text(state.slideData[0].name);
+      $(".description").text(state.slideData[0].content);
+      $(".page").text("page: " +state.slideData[0].page);
+      state.slideData[0].map(crashFeatures);
 
 
-    $("#back").prop("disabled",true);
-    $("#back-to-initial").prop("disabled",true);
-    console.log(state.slideNumber);
-    $(".description").text("page number: "+state.slideNumber); //?? why cannot print slideNumber?? need to use + not ,!!
+      $("#back").prop("disabled",true);
+      $("#back-to-initial").prop("disabled",true);
+      console.log(state.slideNumber);
+      //$(".description").text("page number: "+state.slideNumber); //?? why cannot print slideNumber?? need to use + not ,!!
 
-    // Button Events
-    $("#next").click(function(ev){
-      clickNextButton();
-      //console.log("both button are working!");
+      // Button Events
+      $("#next").click(function(ev){
+        clickNextButton();
+        //console.log("both button are working!");
+      });
+      $("#back").click(function(event){
+        clickPreviousButton();
+      });
+      $("#to-the-end").click(function(event){
+        theEndButton();
+      });
+      $("#back-to-initial").click(function(event){
+        theFrontButton();
+      });
+      // featureGroup = L.geoJson(parsedData, {
+      //   style: myStyle,
+      //   filter: myFilter
+      // }).addTo(map);
+      //
+      // // quite similar to _.each
+      // featureGroup.eachLayer(eachFeatureFunction);
     });
-    $("#back").click(function(event){
-      clickPreviousButton();
-    });
-    $("#to-the-end").click(function(event){
-      theEndButton();
-    });
-    $("#back-to-initial").click(function(event){
-      theFrontButton();
-    });
-    // featureGroup = L.geoJson(parsedData, {
-    //   style: myStyle,
-    //   filter: myFilter
-    // }).addTo(map);
-    //
-    // // quite similar to _.each
-    // featureGroup.eachLayer(eachFeatureFunction);
 });

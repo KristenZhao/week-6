@@ -1,6 +1,5 @@
-var bikeCrash = bikeCrash2014.features;
-console.log(bikeCrash);
-
+var bikeCrashParsed = JSON.parse(BikeCrash2014geoJSON2.json);
+console.log(bikeCrashParsed);
 // /*----------------------------------
 // create a function to filter out only
 // data points that have valid lat longs
@@ -10,5 +9,5 @@ console.log(bikeCrash);
 //   _.each(bikeCrash,)
 // }
 //var bikeCrashValid = bikeCrash.geometry
-var bikeCrashTest = bikeCrash.slice(0,10);
+var bikeCrashTest = bikeCrashParsed.slice(0,10);
 console.log(bikeCrashTest);

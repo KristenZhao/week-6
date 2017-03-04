@@ -2,6 +2,9 @@ h1 {
   font-size: 30px;
 }
 
+h3 {
+  color: #888888;
+}
 #map {
   position:absolute;
   width: 47%;
@@ -12,7 +15,7 @@ h1 {
 }
 
 .side-bar {
-  width: 50%;
+  width: 47%;
   position:absolute;
   left:3%;
   height: 100%;
